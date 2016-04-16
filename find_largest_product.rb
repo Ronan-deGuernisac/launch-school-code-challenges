@@ -35,7 +35,7 @@
 # end
 
 def find_best_thirteen(num)
-  arr = num.chars.map(&:to_i)
+  arr = num.chars.reject { |number| number == "\n" }.map(&:to_i)
   best_thirteen = arr.slice(0, 13)
   arr.each_cons(13) do |next_thirteen|
     best_thirteen = next_thirteen if next_thirteen.reduce(:*) > best_thirteen.reduce(:*)
