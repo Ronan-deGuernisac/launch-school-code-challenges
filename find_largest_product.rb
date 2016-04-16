@@ -38,7 +38,7 @@ def find_best_thirteen(num)
   arr = num.chars.map(&:to_i)
   best_thirteen = arr.slice(0, 13)
   arr.each_cons(13) do |next_thirteen|
-    best_thirteen = next_thirteen if next_thirteen.reduce(:+) > best_thirteen.reduce(:+)
+    best_thirteen = next_thirteen if next_thirteen.reduce(:*) > best_thirteen.reduce(:*)
   end
   best_thirteen
 end
@@ -69,4 +69,4 @@ num = "73167176531330624919225119674426574742355349194934
 # best_thirteen_product = sum_array(best_thirteen)
 
 puts "The thirteen consecutive digits with the highest product is #{find_best_thirteen(num)}."
-puts "The product of those thirteen digits is #{find_best_thirteen(num).reduce(:+)}."
+puts "The product of those thirteen digits is #{find_best_thirteen(num).reduce(:*)}."
