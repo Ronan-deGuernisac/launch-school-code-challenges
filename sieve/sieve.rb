@@ -2,21 +2,22 @@
 
 class Sieve # :nodoc:
   def initialize(upper_limit)
-    @range  = (2..upper_limit).to_a
+    @sieve = {}
+    (2..upper_limit).each { |number| @sieve[number] = nil }
   end
 
   def primes
-    @range.each do |number| 
-      if number.class == Fixnum
-        @range.map! do |num| 
-          if num != number && num % number == 0
-            num = num.to_s 
-          else
-            num = num
-          end
-        end
-      end
+    @sieve.each { |number, mark| mark_multiples(number) if mark.nil? }
+    @sieve.reject { |_, mark| mark == 'Composite' }.keys
+  end
+
+  def mark_multiples(prime)
+    @sieve.each do |number, _|
+      @sieve[number] = 'Composite' if multiple?(number, prime)
     end
-    @range.reject! { |item| item.class == String }
+  end
+
+  def multiple?(num, prime)
+    num > prime && num % prime == 0
   end
 end
