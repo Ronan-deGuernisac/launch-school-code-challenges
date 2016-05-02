@@ -12,12 +12,8 @@ class Sieve # :nodoc:
   end
 
   def mark_multiples(prime)
-    @sieve.each do |number, _|
-      @sieve[number] = 'Composite' if multiple?(number, prime)
+    @sieve.select { |key, _| key > prime }.each do |number, _|
+      @sieve[number] = 'Composite' if number % prime == 0
     end
-  end
-
-  def multiple?(num, prime)
-    num > prime && num % prime == 0
   end
 end
