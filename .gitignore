@@ -1,3 +1,4 @@
 # .gitignore
 
 series/coverage/*
+queen_attack/coverage/*
