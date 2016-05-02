@@ -8,13 +8,17 @@ class Queens # :nodoc:
     queens[:white] == queens[:black]
     @white = queens[:white]
     @black = queens[:black]
+    @board = Array.new(8) { Array.new(8, '_') }
+    place_queens
+  end
+
+  def place_queens
+    @board[white.first][white.last] = 'W'
+    @board[black.first][black.last] = 'B'
   end
 
   def attack?
-    return true if same_row?
-    return true if same_column?
-    return true if same_diagonal?
-    false
+    same_row? || same_column? || same_diagonal?
   end
 
   def same_row?
@@ -30,19 +34,7 @@ class Queens # :nodoc:
   end
 
   def to_s
-    board = [
-['_', '_', '_', '_', '_', '_', '_', '_'],
-['_', '_', '_', '_', '_', '_', '_', '_'],
-['_', '_', '_', '_', '_', '_', '_', '_'],
-['_', '_', '_', '_', '_', '_', '_', '_'],
-['_', '_', '_', '_', '_', '_', '_', '_'],
-['_', '_', '_', '_', '_', '_', '_', '_'],
-['_', '_', '_', '_', '_', '_', '_', '_'],
-['_', '_', '_', '_', '_', '_', '_', '_'],
-]
-    board[white.first][white.last] = 'W'
-    board[black.first][black.last] = 'B'
-    board.map! { |line| line.join(' ') }
-    board.join("\n")
+    board_string = @board.map { |line| line.join(' ') }
+    board_string.join("\n")
   end
 end
