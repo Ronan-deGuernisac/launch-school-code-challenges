@@ -11,7 +11,7 @@
 
 class PigLatin
   def self.translate(string)
-    string.split(' ').map! { |word| anslatetray(word) }.join(' ')
+    string.split(' ').map { |word| anslatetray(word) }.join(' ')
   end
 
   def self.anslatetray(word)
