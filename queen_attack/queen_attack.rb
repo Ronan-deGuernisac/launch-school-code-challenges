@@ -34,7 +34,6 @@ class Queens # :nodoc:
   end
 
   def to_s
-    board_string = @board.map { |line| line.join(' ') }
-    board_string.join("\n")
+    @board.map { |line| line.join(' ') }.join("\n")
   end
 end
