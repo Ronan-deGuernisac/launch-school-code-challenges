@@ -1,8 +1,6 @@
 # crypto_square.rb
 
-require 'pry'
-
-class Crypto
+class Crypto # :nodoc:
   def initialize(string)
     @string = string
   end
@@ -33,46 +31,51 @@ class Crypto
     @string.chars.keep_if { |char| /[0-9a-zA-Z]/ =~ char }.map(&:downcase)
   end
 
-  def string_length
-    cleaned_string.size
-  end
-
   def square_cols
-    Math.sqrt(string_length).ceil
+    Math.sqrt(cleaned_string.size).ceil
   end
 
   def square_rows
-    square.size
+    (cleaned_string.size.to_f / square_cols).ceil
   end
 
-  def square_area
-    square_cols * square_rows
+  def short_rows
+    square_cols * square_rows % cleaned_string.size == 0 ? 0 : 1
+  end
+
+  def long_rows
+    square_rows - short_rows
+  end
+
+  def short_cols
+    square_cols * square_rows - cleaned_string.size
   end
 
   def long_cols
     square_cols - short_cols
   end
 
-  def short_cols
-    square_area - string_length
+  def squarify(characters, first_iterator, second_iterator, first_limiter, second_limiter)
+    square = []
+    first_iterator.times { square << characters.slice!(0, first_limiter) }
+    second_iterator.times { square << characters.slice!(0, second_limiter) }
+    square
+  end
+
+  def cipherify
+    square_copy = square
+    characters = []
+    square_cols.times do
+      square_copy.each { |row| characters << row.shift unless row.empty? }
+    end
+    characters
   end
 
   def square
-    characters = cleaned_string
-    square = []
-    square_cols.times { square << characters.slice!(0, square_cols) }
-    square.reject { |segment| segment.empty? }
+    squarify(cleaned_string, long_rows, short_rows, square_cols, square_cols - short_cols)
   end
 
   def cipher
-    square_copy = square
-    cipher_characters = []
-    square_cols.times do
-      square_copy.each { |row| cipher_characters << row.shift if !row.empty? }
-    end
-    cipher_square = []
-    long_cols.times { cipher_square << cipher_characters.slice!(0, square_rows) }
-    short_cols.times { cipher_square << cipher_characters.slice!(0, square_rows - 1) }
-    cipher_square.reject { |segment| segment.empty? }
+    squarify(cipherify, long_cols, short_cols, square_rows, square_rows - short_rows)
   end
 end
