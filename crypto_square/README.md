@@ -2,7 +2,11 @@
 
 One of the Weekly code challenges from the [Launch School](https://launchschool.com/) curriculum
 
+---
+
 ### Crypto Square
+
+---
 
 Implement the classic method for composing secret messages called a square code.
 
@@ -46,7 +50,8 @@ Output the encoded text grouped by column.
 
 ---
 
-Files in this folder:
+Files in this directory:
 
+* README.md (*problem description*)
 * crypto_square.rb (*solution*)
 * crypto_square_test.rb (*test suite*)
