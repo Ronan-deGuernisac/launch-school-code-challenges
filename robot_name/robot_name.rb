@@ -20,8 +20,9 @@ class Robot # :nodoc:
   end
 
   def reset
-    @@robot_names.delete(@name)
+    old_name = @name
     @name = generate_name
     @@robot_names << @name
+    @@robot_names.delete(old_name)
   end
 end
