@@ -72,10 +72,10 @@ class Game # :nodoc:
   end
 
   def game_in_progress?
-    @rolls.compact.size < 20 + fill_balls
+    @rolls.compact.size < 20 + fill_balls_spaces
   end
 
-  def fill_balls
+  def fill_balls_spaces
     last_frame = @rolls.slice(18, 2).map(&:to_i)
     case
     when strike?(last_frame) && @rolls[20] == 10
