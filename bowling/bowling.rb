@@ -75,7 +75,7 @@ class Game # :nodoc:
   end
 
   def fill_balls_not_played?
-    @rolls.size < 20 + fill_balls_spaces
+    standard_balls_not_played? || @rolls.size < 20 + fill_balls_spaces
   end
 
   def fill_balls_spaces
