@@ -55,5 +55,5 @@ Write code to keep track of the score of a game of bowling. It should support tw
 Files in this directory:
 
 * README.md (*problem description*)
-* crypto_square.rb (*solution*)
-* crypto_square_test.rb (*test suite*)
+* bowling.rb (*solution*)
+* bowling_test.rb (*test suite*)
