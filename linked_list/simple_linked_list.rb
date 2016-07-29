@@ -43,6 +43,22 @@ class SimpleLinkedList # :nodoc:
     @size == 0
   end
 
+  def to_a
+    arr = []
+    current_element = @head
+    until current_element.nil?
+      arr << current_element.datum
+      current_element = current_element.next
+    end
+    arr
+  end
+
+  def self.from_a(input)
+    list = new
+    input.reverse.each { |datum| list.push(datum) } unless input.nil?
+    list
+  end
+
   def reverse
     new_head = @head
     new_head = new_head.next until new_head.tail?
@@ -51,6 +67,8 @@ class SimpleLinkedList # :nodoc:
     @head = new_head
     self
   end
+
+  private
 
   def redirect_pointers(start)
     current_element = start
@@ -70,21 +88,5 @@ class SimpleLinkedList # :nodoc:
       counter += 1
     end
     current_element
-  end
-
-  def to_a
-    arr = []
-    current_element = @head
-    until current_element.nil?
-      arr << current_element.datum
-      current_element = current_element.next
-    end
-    arr
-  end
-
-  def self.from_a(input)
-    list = new
-    input.reverse.each { |datum| list.push(datum) } unless input.nil?
-    list
   end
 end
