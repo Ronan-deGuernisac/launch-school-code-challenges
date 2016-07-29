@@ -46,16 +46,20 @@ class SimpleLinkedList
   def reverse
     new_head = @head
     new_head = new_head.next until new_head.tail?
-    current_element = new_head
+    redirect_pointers(new_head)
+    @head.next = nil
+    @head = new_head
+    self
+  end
+
+  def redirect_pointers(start)
+    current_element = start
     current_position = self.size
     until current_position == 1
       current_element.next = previous_element(current_position - 1)
       current_element = current_element.next
       current_position -= 1
     end
-    @head.next = nil
-    @head = new_head
-    self
   end
 
   def previous_element(position)
