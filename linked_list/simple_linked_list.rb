@@ -1,10 +1,10 @@
 # simple_linked_list.rb
 
-class Element
+class Element # :nodoc:
   attr_reader :datum
   attr_accessor :next
 
-  def initialize(datum, next_element=nil)
+  def initialize(datum, next_element = nil)
     @datum = datum
     @next = next_element
   end
@@ -14,7 +14,7 @@ class Element
   end
 end
 
-class SimpleLinkedList
+class SimpleLinkedList # :nodoc:
   attr_accessor :head
   attr_reader :size
 
@@ -29,18 +29,18 @@ class SimpleLinkedList
 
   def pop
     datum = @head.datum
-    @head.tail? ? @head = nil : @head = @head.next
+    @head = @head.tail? ? nil : @head.next
     @size -= 1
     datum
   end
 
   def peek
-    return nil if self.empty?
+    return nil if empty?
     @head.datum
   end
 
   def empty?
-    self.size == 0
+    @size == 0
   end
 
   def reverse
@@ -54,7 +54,7 @@ class SimpleLinkedList
 
   def redirect_pointers(start)
     current_element = start
-    current_position = self.size
+    current_position = @size
     until current_position == 1
       current_element.next = previous_element(current_position - 1)
       current_element = current_element.next
@@ -67,7 +67,7 @@ class SimpleLinkedList
     counter = 1
     until counter == position
       current_element = current_element.next
-      counter +=1
+      counter += 1
     end
     current_element
   end
@@ -75,7 +75,7 @@ class SimpleLinkedList
   def to_a
     arr = []
     current_element = @head
-    until current_element.nil? do
+    until current_element.nil?
       arr << current_element.datum
       current_element = current_element.next
     end
@@ -83,7 +83,7 @@ class SimpleLinkedList
   end
 
   def self.from_a(input)
-    list = self.new
+    list = new
     input.reverse.each { |datum| list.push(datum) } unless input.nil?
     list
   end
