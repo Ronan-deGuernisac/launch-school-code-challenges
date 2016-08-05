@@ -22,7 +22,7 @@ class Garden # :nodoc:
 
   def method_missing(method_name)
     name = method_name.to_s
-    validate_name(name)
+    super unless @gardens.key?(name)
     @gardens[name]
   end
 
@@ -39,10 +39,5 @@ class Garden # :nodoc:
       gardens[kid] = row_1.shift(2) + row_2.shift(2)
     end
     gardens
-  end
-
-  def validate_name(name)
-    raise NoMethodError, "undefined method `#{name}' for #{self}" unless
-      @gardens.key?(name)
   end
 end
