@@ -29,7 +29,7 @@ class Garden # :nodoc:
   private
 
   def seed_to_plant(row)
-    row.map { |seed| seed.gsub!(/[A-Z]/, SEED_PLANT_MAP).to_sym }
+    row.map { |seed| SEED_PLANT_MAP[seed] }
   end
 
   def assign_gardens
