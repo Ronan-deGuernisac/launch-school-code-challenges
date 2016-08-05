@@ -15,8 +15,8 @@ class Scrabble # :nodoc:
 
   def self.score(word)
     return 0 if word.nil? || word.empty?
-    word.downcase.chars.map { |letter| letter.gsub(/[a-z]/, SCORES) }
-        .map(&:to_i).reduce(&:+)
+    word.downcase.chars.map { |letter| letter.gsub(/[a-z]/, SCORES).to_i }
+        .reduce(&:+)
   end
 
   def score
