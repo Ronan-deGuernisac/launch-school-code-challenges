@@ -1,29 +1,21 @@
 # diamond.rb
 
 class Diamond #:nodoc:
-  def self.make_diamond(transverse_letter)
-    diamond = [*'A'..transverse_letter] + [*'A'...transverse_letter].reverse
-    diamond.map { |letter| add_inner_padding(letter) }
-           .map { |section| add_outer_padding(section, transverse_letter) }
-           .join("\n") + "\n"
-  end
+  def self.make_diamond(middle_letter)
+    diamond = [*'A'..middle_letter] + [*'A'...middle_letter].reverse
 
-  def self.add_inner_padding(letter)
-    padding = calculate_padding(letter)
-    return letter if padding == 0
-    letter.ljust(padding) + letter
-  end
-
-  def self.add_outer_padding(section, transverse_letter)
-    width = calculate_padding(transverse_letter) + 1
-    section.center(width)
+    diamond.map { |letter| create_section(letter, diamond.size) }.join
   end
 
   class << self
     private
 
-    def calculate_padding(letter)
-      (letter.ord - 65) * 2
+    def create_section(letter, width)
+      inner_padding = (letter.ord - 65) * 2
+      section = letter.ljust(inner_padding)
+
+      return section.center(width) + "\n" if inner_padding == 0
+      (section + letter).center(width) + "\n"
     end
   end
 end
