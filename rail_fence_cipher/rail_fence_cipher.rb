@@ -1,54 +1,58 @@
 # rail_fence_cipher.rb
 
-class RailFenceCipher
-  def self.encode(string, rail_count)
-    characters = string.chars
-    rails = Array.new(rail_count) { Array.new }
-    rail_order = set_rail_order(string, rail_count)
+class RailFenceCipher # :nodoc:
+  attr_accessor :characters, :rails
+  attr_reader :rail_order
 
-    rail_order.each do |rail_number|
-      rails[rail_number - 1] << characters.shift
-    end
-    rails.flatten.join
+  def initialize(text, rail_count)
+    @characters = text.chars
+    @rails = Array.new(rail_count) { [] }
+    @rail_order = set_rail_order(text, rail_count)
   end
 
-  def self.decode(string, rail_count)
-    characters = string.chars
-    rails = Array.new(rail_count) { Array.new }
-    rail_order = set_rail_order(string, rail_count)
-    rails.each_index do |index|
-      rail_spaces = rail_order.count(index + 1)
+  def self.encode(text, rail_count)
+    cipher = new(text, rail_count)
+
+    cipher.rail_order.each do |rail_number|
+      cipher.rails[rail_number - 1] << cipher.characters.shift
+    end
+    cipher.rails.flatten.join
+  end
+
+  def self.decode(text, rail_count)
+    cipher = new(text, rail_count)
+    cipher.fill_rails
+
+    deciphered_text = ''
+    cipher.rail_order.each do |rail_number|
+      deciphered_text << cipher.rails[rail_number - 1].shift
+    end
+    deciphered_text
+  end
+
+  def fill_rails
+    @rails.each_index do |index|
+      rail_spaces = @rail_order.count(index + 1)
 
       count = 0
       while count < rail_spaces
-        rails[index] << characters.shift
+        @rails[index] << @characters.shift
         count += 1
       end
     end
-    str = ''
-    rail_order.each do |rail|
-      rail_index = rail - 1
-      character = rails[rail_index].shift
-      str << character
-    end
-    str
   end
 
   private
 
-  def self.set_rail_order(string, rail_count)
-    string_length = string.length
-    if rail_count == 1
-      zigzags = [1]
-    else
-      zigzags = [*1...rail_count] + [*2..rail_count].reverse
-    end
-    zig_zag_number = (string_length / rail_count.to_f).ceil
+  def set_rail_order(text, rail_count)
+    zigzags = [*1...rail_count] + [*1..rail_count].reverse
+    zigzags.pop unless rail_count == 1
+    zigzag_amount = (text.length / rail_count.to_f).ceil
     order = []
-    zig_zag_number.times do
+
+    zigzag_amount.times do
       order << zigzags
     end
-    order.flatten.slice(0, string_length)
+    order.flatten.slice(0, text.length)
   end
-
 end
