@@ -33,8 +33,8 @@ class RailFenceCipher # :nodoc:
   def fill_rails
     @rails.each_index do |index|
       rail_spaces = @rail_order.count(index + 1)
-
       count = 0
+      
       while count < rail_spaces
         @rails[index] << @characters.shift
         count += 1
