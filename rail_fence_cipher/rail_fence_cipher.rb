@@ -47,7 +47,7 @@ class RailFenceCipher # :nodoc:
   def set_rail_order(text, rail_count)
     zigzags = [*1...rail_count] + [*1..rail_count].reverse
     zigzags.pop unless rail_count == 1
-    zigzag_amount = (text.length / rail_count.to_f).ceil
+    zigzag_amount = (text.length / zigzags.length.to_f).ceil
     order = []
 
     zigzag_amount.times do
