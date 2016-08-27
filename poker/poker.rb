@@ -1,23 +1,4 @@
 # poker.rb
-require 'pry'
-# Need to rank the hands (high card, pair, two pair, etc..)
-#   Conditions for ranking (based on suits and/ or values)
-#     Straight Flush = 5 identical suits + values consecutive
-#     Four of a kind = 4 identical values
-#     Full house = 3 identical values + 2 identical values
-#     Flush = 5 identical suits
-#     Straight = values consecutive
-#     Three of a Kind = 3 identical values
-#     Two pair = 2 x 2 identical values
-#     Pair = 2 identical values
-#     High card = no other conditions met
-
-# In the event of hands of equal rank need to identify best hand of that rank
-#   Values of cards in each hand of the same rank are compared in order
-#   until one hand
-#   is found to have a card of higher value than another hand. If all cards are
-#   of equal value
-#   then the round is tied (split pot)- both hands should be returned
 
 class Poker # :nodoc:
   def initialize(hands)
@@ -64,10 +45,10 @@ class PokerHand # :nodoc:
   end
 
   def order_cards
-    ordered_cards = @cards.sort_by(&:value)
-    grouped_cards = ordered_cards.group_by { |card| card.value }
-      .sort_by { |group_value, card_arr| card_arr.map(&:value).count(group_value) }
-      .to_h.values.flatten.reverse
+    @cards.sort_by(&:value).group_by(&:value)
+          .sort_by do |group_value, card_group|
+      card_group.map(&:value).count(group_value)
+    end.to_h.values.flatten.reverse
   end
 
   def rank
