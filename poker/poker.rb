@@ -43,52 +43,31 @@ class Poker # :nodoc:
   end
 
   def rank_by_card(ranked_hands)
-    ordered_hands = ranked_hands.map(&:comparison_order)
-
-    hands_ranked_by_card_values = nil
-    5.times do
-      hands_ranked_by_card_values = []
-      compare_cards(ordered_hands, hands_ranked_by_card_values, ranked_hands)
-      break if hands_ranked_by_card_values.size == 1
+    max_values = ranked_hands.map(&:ordered_values).transpose.map(&:max)
+    max_values.each_with_index do |value, index|
+      ranked_hands.reject! { |hand| hand.ordered_values[index] != value }
+      return ranked_hands if ranked_hands.size == 1
     end
-    hands_ranked_by_card_values
-  end
-
-  def compare_cards(ordered_hands, hands_ranked_by_card_values, ranked_hands)
-    comparison_cards = {}
-    ordered_hands.each_with_index do |hand, index|
-      comparison_cards[index] = hand.last
-      hand.rotate!
-    end
-    highest_value = comparison_cards
-                    .map { |_, card_value| card_value.value }.max
-    comparison_cards
-      .reject! { |_, card_value| card_value.value < highest_value }
-    comparison_cards.keys.each do |hand_index|
-      hands_ranked_by_card_values << ranked_hands[hand_index]
-    end
+    ranked_hands
   end
 end
 
 class PokerHand # :nodoc:
-  attr_reader :cards, :comparison_order
+  attr_reader :cards, :comparison_order, :ordered_values
 
   def initialize(hand)
     @cards = []
     hand.each { |card| @cards << Card.new(card) }
     @hand_values = @cards.map(&:value)
     @hand_suits = @cards.map(&:suit)
-    @comparison_order = order_cards
+    @ordered_values = order_cards.map(&:value)
   end
 
   def order_cards
     ordered_cards = @cards.sort_by(&:value)
-    if quads? && ordered_cards.first.value != ordered_cards.last.value
-      ordered_cards.rotate!
-    elsif full_house? && ordered_cards.first.value != ordered_cards.last.value
-      ordered_cards.rotate!(2)
-    end
-    ordered_cards
+    grouped_cards = ordered_cards.group_by { |card| card.value }
+      .sort_by { |group_value, card_arr| card_arr.map(&:value).count(group_value) }
+      .to_h.values.flatten.reverse
   end
 
   def rank
