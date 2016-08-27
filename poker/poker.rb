@@ -34,7 +34,7 @@ class Poker # :nodoc:
 end
 
 class PokerHand # :nodoc:
-  attr_reader :cards, :comparison_order, :ordered_values
+  attr_reader :cards, :ordered_values
 
   def initialize(hand)
     @cards = []
