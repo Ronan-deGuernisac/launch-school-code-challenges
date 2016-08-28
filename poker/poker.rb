@@ -23,7 +23,7 @@ class PokerHand # :nodoc:
   end
 
   def group_and_sort
-    @cards.map(&:value).sort.group_by { |val| val }
+    @cards.map(&:value).sort.group_by { |card_value| card_value }
           .sort_by { |group_value, group| group.count(group_value) }
           .to_h.values.reverse
   end
