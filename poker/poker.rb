@@ -2,7 +2,7 @@
 
 class Poker # :nodoc:
   def initialize(hands)
-    @hands = hands.map{ |hand| PokerHand.new(hand) }
+    @hands = hands.map { |hand| PokerHand.new(hand) }
   end
 
   def best_hand
