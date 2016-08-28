@@ -12,8 +12,6 @@ class Poker # :nodoc:
 end
 
 class PokerHand # :nodoc:
-  attr_reader :cards
-
   def initialize(hand)
     @cards = hand.map { |card| Card.new(card) }
   end
