@@ -2,67 +2,57 @@
 
 class Poker # :nodoc:
   def initialize(hands)
-    @hands = []
-    hands.each { |hand| @hands << PokerHand.new(hand) }
+    @hands = hands.map{ |hand| PokerHand.new(hand) }
   end
 
   def best_hand
-    ranked_hands = rank_by_hand
-    return sanitize_output(ranked_hands) if ranked_hands.size == 1
-    sanitize_output(rank_by_card(ranked_hands))
-  end
-
-  def sanitize_output(hands)
-    hands.map do |hand|
-      hand.cards.map(&:card_code)
-    end
-  end
-
-  def rank_by_hand
-    best_rank = @hands.map(&:rank).min
-    @hands.reject { |hand| hand.rank != best_rank }
-  end
-
-  def rank_by_card(ranked_hands)
-    max_values = ranked_hands.map(&:ordered_values).transpose.map(&:max)
-    max_values.each_with_index do |value, index|
-      ranked_hands.reject! { |hand| hand.ordered_values[index] != value }
-      return ranked_hands if ranked_hands.size == 1
-    end
-    ranked_hands
+    highest_score = @hands.map(&:score).max
+    @hands.select { |hand| hand.score == highest_score }.map(&:to_a)
   end
 end
 
 class PokerHand # :nodoc:
-  attr_reader :cards, :ordered_values
+  attr_reader :cards
 
   def initialize(hand)
-    @cards = []
-    hand.each { |card| @cards << Card.new(card) }
-    @hand_values = @cards.map(&:value)
-    @hand_suits = @cards.map(&:suit)
-    @ordered_values = order_cards.map(&:value)
+    @cards = hand.map { |card| Card.new(card) }
   end
 
-  def order_cards
-    @cards.sort_by(&:value).group_by(&:value)
-          .sort_by do |group_value, card_group|
-      card_group.map(&:value).count(group_value)
-    end.to_h.values.flatten.reverse
+  def score
+    [rank, ordered_values]
+  end
+
+  def group_and_sort
+    @cards.map(&:value).sort.group_by { |val| val }
+          .sort_by { |group_value, group| group.count(group_value) }
+          .to_h.values.reverse
+  end
+
+  def count_group_sizes
+    group_and_sort.map(&:size)
+  end
+
+  def ordered_values
+    return [5, 4, 3, 2, 1] if ace_low_straight?
+    group_and_sort.flatten
   end
 
   def rank
     case
-    when straight_flush? then 1
-    when quads? then 2
-    when full_house? then 3
-    when flush? then 4
+    when straight_flush? then 9
+    when quads? then 8
+    when full_house? then 7
+    when flush? then 6
     when straight? then 5
-    when trips? then 6
-    when two_pair? then 7
-    when pair? then 8
-    else 9
+    when trips? then 4
+    when two_pair? then 3
+    when pair? then 2
+    else 1
     end
+  end
+
+  def ace_low_straight?
+    @cards.map(&:value).reduce(&:+) == 28
   end
 
   def straight_flush?
@@ -70,60 +60,55 @@ class PokerHand # :nodoc:
   end
 
   def quads?
-    count_values.sort == [1, 4]
+    count_group_sizes == [4, 1]
   end
 
   def full_house?
-    count_values.sort == [2, 3]
+    count_group_sizes == [3, 2]
   end
 
   def flush?
-    @hand_suits.uniq.size == 1
+    @cards.map(&:suit).uniq.size == 1
   end
 
   def straight?
-    sorted_vals = @hand_values.sort.join
-    ace_to_five_straight?(sorted_vals) || [*2..14].join.include?(sorted_vals)
+    count_group_sizes.size == 5 && ordered_values.minmax.reduce(&:-) == -4
   end
 
   def trips?
-    count_values.sort == [1, 1, 3]
+    count_group_sizes == [3, 1, 1]
   end
 
   def two_pair?
-    count_values.sort == [1, 2, 2]
+    count_group_sizes == [2, 2, 1]
   end
 
   def pair?
-    count_values.sort == [1, 1, 1, 2]
+    count_group_sizes == [2, 1, 1, 1]
   end
 
-  def count_values
-    @hand_values.uniq.map { |value| @hand_values.count(value) }
-  end
-
-  def ace_to_five_straight?(string)
-    string == '234514'
+  def to_a
+    @cards.map(&:card)
   end
 end
 
 class Card # :nodoc:
-  CARD_VALUES = {
+  VALUES = {
     '2' => 2, '3' => 3, '4' => 4, '5' => 5, '6' => 6, '7' => 7, '8' => 8,
     '9' => 9, 'T' => 10, 'J' => 11, 'Q' => 12, 'K' => 13, 'A' => 14
   }.freeze
 
-  attr_reader :card_code, :value, :suit
+  attr_reader :card
 
   def initialize(card)
-    @card_code = card
+    @card = card
   end
 
   def value
-    @card_code.chars.first.gsub(/[2-9TJQKA]/, CARD_VALUES).to_i
+    @card.chars.first.gsub(/[2-9TJQKA]/, VALUES).to_i
   end
 
   def suit
-    @card_code.chars.last
+    @card.chars.last
   end
 end
