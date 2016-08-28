@@ -68,7 +68,7 @@ class PokerHand # :nodoc:
   end
 
   def straight?
-    @group_sizes.size == 5 && ordered_values.minmax.reduce(&:-) == -4
+    @group_sizes == [1, 1, 1, 1, 1] && ordered_values.minmax.reduce(&:-) == -4
   end
 
   def trips?
