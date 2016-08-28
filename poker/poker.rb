@@ -14,6 +14,8 @@ end
 class PokerHand # :nodoc:
   def initialize(hand)
     @cards = hand.map { |card| Card.new(card) }
+    @groups = group_and_sort
+    @group_sizes = @groups.map(&:size)
   end
 
   def score
@@ -26,13 +28,9 @@ class PokerHand # :nodoc:
           .to_h.values.reverse
   end
 
-  def count_group_sizes
-    group_and_sort.map(&:size)
-  end
-
   def ordered_values
     return [5, 4, 3, 2, 1] if ace_low_straight?
-    group_and_sort.flatten
+    @groups.flatten
   end
 
   def rank
@@ -58,11 +56,11 @@ class PokerHand # :nodoc:
   end
 
   def quads?
-    count_group_sizes == [4, 1]
+    @group_sizes == [4, 1]
   end
 
   def full_house?
-    count_group_sizes == [3, 2]
+    @group_sizes == [3, 2]
   end
 
   def flush?
@@ -70,19 +68,19 @@ class PokerHand # :nodoc:
   end
 
   def straight?
-    count_group_sizes.size == 5 && ordered_values.minmax.reduce(&:-) == -4
+    @group_sizes.size == 5 && ordered_values.minmax.reduce(&:-) == -4
   end
 
   def trips?
-    count_group_sizes == [3, 1, 1]
+    @group_sizes == [3, 1, 1]
   end
 
   def two_pair?
-    count_group_sizes == [2, 2, 1]
+    @group_sizes == [2, 2, 1]
   end
 
   def pair?
-    count_group_sizes == [2, 1, 1, 1]
+    @group_sizes == [2, 1, 1, 1]
   end
 
   def to_a
