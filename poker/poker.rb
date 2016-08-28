@@ -6,8 +6,8 @@ class Poker # :nodoc:
   end
 
   def best_hand
-    highest_score = @hands.map(&:score).max
-    @hands.select { |hand| hand.score == highest_score }.map(&:to_a)
+    best_score = @hands.map(&:score).max
+    @hands.select { |hand| hand.score == best_score }.map(&:to_a)
   end
 end
 
