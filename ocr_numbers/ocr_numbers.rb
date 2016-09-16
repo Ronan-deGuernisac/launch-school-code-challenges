@@ -13,7 +13,7 @@
 #   * Pad rows shorter than the longest row with blank spaces so that all rows are equal length (String#ljust ?)
 # 2. Slice each row into groups of three (possibly using String#scan ?). this returns an array
 #   * Transpose the arrays so that there is an array for each 'digit' (Array#transpose)
-#   * Map each didgit array to a number value (or a OCR_digit object) (use Array#& )
+#   * Map each digit array to a number value (or a OCR_digit object) (use Array#& )
 # 3. Join all the values to create a digit string which is returned by the OCR#convert method
 #   * The string should be comma separated every three characters for digits of 1,000 or higher 
 
@@ -24,19 +24,32 @@ class OCR
     [" _ ", "|_|", "|_|"], [" _ ", "|_|", " _|"]
   ]
   def initialize(text)
-    @text = text
+    @rows = make_rows(text)
   end
 
   def convert
-    rows = @text.split("\n")
-    longest_row_length = rows.map { |row| row.size }.max
-    rows.map! { |row| row.ljust(longest_row_length) }
-    rows.map! { |row| row.scan(/.../) }
-    digits = rows.transpose
+    @rows.map { |row| rows_to_digits(row) }.flatten.join(',')
+  end
+
+  def rows_to_digits(digit_rows)
+    max_row_length = digit_rows.map { |row| row.size }.max
+    digit_rows.map! { |row| row.ljust(max_row_length) }
+    digit_rows.map! { |row| row.scan(/.../) }
+    digits = digit_rows.transpose
     digits.map { |digit| convert_digit(digit).to_s }.flatten.join
   end
 
   def convert_digit(digit_sections)
     DIGIT_MAP.index(digit_sections) || '?'
+  end
+
+  def make_rows(text)
+    # need to split into groups of 4 then discard the 4th if it exists
+    split_text = text.split("\n")
+    rows = []
+    while split_text.size > 0
+      rows << split_text.slice!(0, 4)
+    end
+    rows.map { |row| row.slice(0, 3) }
   end
 end

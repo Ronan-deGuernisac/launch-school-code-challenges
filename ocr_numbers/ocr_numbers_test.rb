@@ -173,7 +173,7 @@ class OCRTest < Minitest::Test
   end
 
   def test_identify_123_456_789 # rubocop:disable Metrics/MethodLength
-    skip
+    # skip
     text = <<-NUMBER.chomp
     _  _
   | _| _|
