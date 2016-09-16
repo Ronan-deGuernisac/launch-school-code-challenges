@@ -7,6 +7,7 @@ class OCR # :nodoc:
     [' _ ', '|_ ', '|_|'], [' _ ', '  |', '  |'], [' _ ', '|_|', '|_|'],
     [' _ ', '|_|', ' _|']
   ].freeze
+  
   def initialize(text)
     @text = text.split("\n")
     @rows = make_rows
