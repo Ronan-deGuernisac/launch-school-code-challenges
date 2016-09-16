@@ -45,11 +45,6 @@ class OcrDigit # :nodoc:
   ].freeze
 
   def initialize(digit_string)
-    @digit_string = digit_string
-    @digit = convert_digit
-  end
-
-  def convert_digit
-    DIGIT_MAP.index(@digit_string) || '?'
+    @digit = DIGIT_MAP.index(digit_string) || '?'
   end
 end
