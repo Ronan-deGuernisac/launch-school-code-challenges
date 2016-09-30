@@ -1,7 +1,7 @@
 # secret_handshake.rb
 
-class SecretHandshake
-  COMMANDS = ['wink', 'double blink', 'close your eyes', 'jump']
+class SecretHandshake # :nodoc:
+  COMMANDS = ['wink', 'double blink', 'close your eyes', 'jump'].freeze
 
   attr_reader :commands
 
