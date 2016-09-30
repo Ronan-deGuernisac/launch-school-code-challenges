@@ -48,6 +48,18 @@ class SecretHandshakeTest < Minitest::Test
     assert_equal expected, handshake.commands
   end
 
+  def test_valid_string_input
+    # skip
+    handshake = SecretHandshake.new('1')
+    assert_equal ['wink'], handshake.commands
+  end
+
+  def test_another_valid_string_input
+    # skip
+    handshake = SecretHandshake.new('11001')
+    assert_equal ['jump', 'wink'], handshake.commands
+  end
+
   def test_invalid_handshake
     # skip
     handshake = SecretHandshake.new('piggies')
