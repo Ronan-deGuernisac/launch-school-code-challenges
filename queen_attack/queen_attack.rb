@@ -5,7 +5,7 @@ class Queens # :nodoc:
 
   def initialize(queens = { white: [0, 3], black: [7, 3] })
     raise ArgumentError, 'Queens cannot occupy the same space' if
-    queens[:white] == queens[:black]
+      queens[:white] == queens[:black]
     @white = queens[:white]
     @black = queens[:black]
     @board = Array.new(8) { Array.new(8, '_') }
