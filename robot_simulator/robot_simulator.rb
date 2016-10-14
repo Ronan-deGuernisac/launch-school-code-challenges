@@ -24,10 +24,11 @@
 class Robot
   DIRECTIONS = [:north, :east, :south, :west].freeze
 
-  attr_reader :bearing
+  attr_reader :bearing, :coordinates
 
   def initialize
     @bearing = nil
+    @coordinates = []
   end
   
   def orient(direction)
@@ -44,5 +45,18 @@ class Robot
   def turn_left
     idx = DIRECTIONS.find_index(bearing)
     @bearing = DIRECTIONS.rotate(-1)[idx]
+  end
+
+  def at(*coords)
+    @coordinates = coords
+  end
+
+  def advance
+    case bearing
+      when :north then @coordinates[1] += 1
+      when :south then @coordinates[1] -= 1
+      when :east then @coordinates[0] += 1
+      when :west then @coordinates[0] -= 1
+    end
   end
 end
