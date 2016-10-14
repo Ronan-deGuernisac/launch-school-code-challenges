@@ -1,6 +1,6 @@
 # robot_simulator.rb
 
-class Robot
+class Robot # :nodoc:
   DIRECTIONS = [:north, :east, :south, :west].freeze
 
   attr_reader :bearing, :coordinates
@@ -9,10 +9,10 @@ class Robot
     @bearing = nil
     @coordinates = []
   end
-  
+
   def orient(direction)
-    raise ArgumentError, 
-      'Direction is invalid' unless DIRECTIONS.include?(direction)
+    raise ArgumentError,
+          'Direction is invalid' unless DIRECTIONS.include?(direction)
     @bearing = direction
   end
 
@@ -32,15 +32,15 @@ class Robot
 
   def advance
     case bearing
-      when :north then @coordinates[1] += 1
-      when :south then @coordinates[1] -= 1
-      when :east then @coordinates[0] += 1
-      when :west then @coordinates[0] -= 1
+    when :north then @coordinates[1] += 1
+    when :south then @coordinates[1] -= 1
+    when :east then @coordinates[0] += 1
+    when :west then @coordinates[0] -= 1
     end
   end
 end
 
-class Simulator
+class Simulator # :nodoc:
   INSTRUCTIONS_MAP = {
     'L' => :turn_left,
     'R' => :turn_right,
@@ -70,7 +70,7 @@ class Simulator
     case instruction
     when :turn_left then robot.turn_left
     when :turn_right then robot.turn_right
-    when :advance then robot.advance  
+    when :advance then robot.advance
     end
   end
 end
