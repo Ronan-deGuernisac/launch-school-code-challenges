@@ -61,23 +61,56 @@ class Robot
   end
 end
 
-1. For the simulator need a Simulator class
-  - Simulator class has an `instructions` instance method
-    - `Simulator#instructions` takes a String as an argument and returns an Array
-    of Symbols (each symbol being equivalent to the String character)
-  - Simulator class has a `place` instance method which takes two arguments:
-    - A Robot object
-    - A Hash with three key-value pairs:
-      - Integer value of the 'x' axis
-      - Integer value of the 'y' axis
-      - Symbol value of the direction
-    - `Simulator#place` sets the corresponding ivars of the Robot object to the
-      values in the hash
-  - Simulator class has an `evaluate` instance method
-    - `Simulator#evaluate` takes two arguments
-      - A Robot object
-      - A String of instructions
-    - `Simulator#evaluate` parses the instructions and applies the corresponding
-      actions to the Robot object
+# 1. For the simulator need a Simulator class
+#   - Simulator class has an `instructions` instance method
+#     - `Simulator#instructions` takes a String as an argument and returns an Array
+#     of Symbols (each symbol being equivalent to the String character)
+#   - Simulator class has a `place` instance method which takes two arguments:
+#     - A Robot object
+#     - A Hash with three key-value pairs:
+#       - Integer value of the 'x' axis
+#       - Integer value of the 'y' axis
+#       - Symbol value of the direction
+#     - `Simulator#place` sets the corresponding ivars of the Robot object to the
+#       values in the hash
+#   - Simulator class has an `evaluate` instance method
+#     - `Simulator#evaluate` takes two arguments
+#       - A Robot object
+#       - A String of instructions
+#     - `Simulator#evaluate` parses the instructions and applies the corresponding
+#       actions to the Robot object
 
+class Simulator
+  INSTRUCTIONS_MAP = {
+    'L' => :turn_left,
+    'R' => :turn_right,
+    'A' => :advance
+  }.freeze
 
+  def instructions(instruction_list)
+    instruction_list.chars.map do |instruction|
+      INSTRUCTIONS_MAP[instruction]
+    end
+  end
+
+  def place(robot, robot_data)
+    robot.at(robot_data[:x], robot_data[:y])
+    robot.orient(robot_data[:direction])
+  end
+
+  def evaluate(robot, instruction_list)
+    instructions(instruction_list).each do |instruction|
+      instruct_robot(robot, instruction)
+    end
+  end
+
+  private
+
+  def instruct_robot(robot, instruction)
+    case instruction
+    when :turn_left then robot.turn_left
+    when :turn_right then robot.turn_right
+    when :advance then robot.advance  
+    end
+  end
+end
