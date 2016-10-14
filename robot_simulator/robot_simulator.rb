@@ -60,17 +60,7 @@ class Simulator # :nodoc:
 
   def evaluate(robot, instruction_list)
     instructions(instruction_list).each do |instruction|
-      instruct_robot(robot, instruction)
-    end
-  end
-
-  private
-
-  def instruct_robot(robot, instruction)
-    case instruction
-    when :turn_left then robot.turn_left
-    when :turn_right then robot.turn_right
-    when :advance then robot.advance
+      robot.send(instruction)
     end
   end
 end
