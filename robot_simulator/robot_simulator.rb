@@ -22,6 +22,8 @@
 
 
 class Robot
+  DIRECTIONS = [:north, :east, :south, :west].freeze
+
   attr_reader :bearing
 
   def initialize
@@ -29,6 +31,18 @@ class Robot
   end
   
   def orient(direction)
+    raise ArgumentError, 
+      'Direction is invalid' unless DIRECTIONS.include?(direction)
     @bearing = direction
+  end
+
+  def turn_right
+    idx = DIRECTIONS.find_index(bearing)
+    @bearing = DIRECTIONS.rotate[idx]
+  end
+
+  def turn_left
+    idx = DIRECTIONS.find_index(bearing)
+    @bearing = DIRECTIONS.rotate(-1)[idx]
   end
 end
