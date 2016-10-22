@@ -33,6 +33,7 @@ class WordProblem # :nodoc:
         word.to_i
       end
     end
+    # maps to nil if no condition matched
   end
 
   def next_element
